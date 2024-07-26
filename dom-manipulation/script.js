@@ -21,9 +21,14 @@ function createAddQuoteForm() {
   const newQuoteCategory = document.getElementById("newQuoteCategory").value;
 
   if (newQuoteText && newQuoteCategory) {
-    quotes.push({ text: newQuoteText, category: newQuoteCategory });
+    const newQuote = { text: newQuoteText, category: newQuoteCategory };
+    quotes.push(newQuote);
     document.getElementById("newQuoteText").value = "";
     document.getElementById("newQuoteCategory").value = "";
+
+    const newQuoteElement = document.createElement("div");
+    newQuoteElement.innerHTML = `<p>${quote.text}</p> <em><p>${quote.category}</p></em>`;
+    document.getElementById("quoteContainer").appendChild(newQuoteElement);
 
     alert("Quote added succesfully!");
   } else {
