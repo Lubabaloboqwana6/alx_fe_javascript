@@ -44,13 +44,13 @@ function createAddQuoteForm() {
 
 function exportQuotes() {
   const dataStr = JSON.stringify(quotes);
-  const dataUri =
-    "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
 
   const exportFileDefaultName = "quotes.json";
 
   let linkElement = document.createElement("a");
-  linkElement.setAttribute("href", dataUri);
+  linkElement.setAttribute("href", url);
   linkElement.setAttribute("download", exportFileDefaultName);
   linkElement.click();
 }
@@ -68,9 +68,6 @@ function importFromJsonFile(event) {
 }
 
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
-document
-  .getElementById("addQuote")
-  .addEventListener("click", createAddQuoteForm);
 document.getElementById("exportQuotes").addEventListener("click", exportQuotes);
 document
   .getElementById("importFile")
