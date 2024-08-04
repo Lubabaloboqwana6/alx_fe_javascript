@@ -1,4 +1,4 @@
-const serverUrl = "https://jsonplaceholder.typicode.com/posts";
+const serverUrl = "https://jsonplaceholder.typicode.com/posts"; // Mock API for simulation
 const quotes = JSON.parse(localStorage.getItem("quotes")) || [
   {
     text: "The only limit to our realization of tomorrow is our doubts of today",
@@ -61,7 +61,7 @@ function importFromJsonFile(event) {
     quotes.push(...importedQuotes);
     saveQuotes();
     alert("Quotes imported successfully!");
-    location.reload();
+    location.reload(); // Reload the page to reflect the imported quotes
   };
   fileReader.readAsText(event.target.files[0]);
 }
@@ -97,7 +97,7 @@ function displayQuotes(quotesToDisplay = quotes) {
   });
 }
 
-function fetchServerData() {
+function fetchQuotesFromServer() {
   fetch(serverUrl)
     .then((response) => response.json())
     .then((serverQuotes) => {
@@ -148,4 +148,4 @@ document
 populateCategories();
 displayQuotes();
 
-setInterval(fetchServerData, 60000);
+setInterval(fetchQuotesFromServer, 60000);
