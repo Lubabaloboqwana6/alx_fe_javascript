@@ -97,13 +97,14 @@ function displayQuotes(quotesToDisplay = quotes) {
   });
 }
 
-function fetchQuotesFromServer() {
-  fetch(serverUrl)
-    .then((response) => response.json())
-    .then((serverQuotes) => {
-      resolveConflicts(serverQuotes);
-    })
-    .catch((error) => console.error("Error fetching data from server:", error));
+async function fetchQuotesFromServer() {
+  try {
+    const response = await fetch(serverUrl);
+    const serverQuotes = await response.json();
+    resolveConflicts(serverQuotes);
+  } catch (error) {
+    console.error("Error fetching data from server:", error);
+  }
 }
 
 function resolveConflicts(serverQuotes) {
@@ -119,7 +120,7 @@ function resolveConflicts(serverQuotes) {
   );
 
   localStorage.setItem("quotes", JSON.stringify(uniqueQuotes));
-  quotes.length = 0;
+  quotes.length = 0; // Clear current quotes array
   quotes.push(...uniqueQuotes);
   displayQuotes();
   notifyUser("Data has been synced with the server.");
@@ -145,7 +146,9 @@ document
   .getElementById("categoryFilter")
   .addEventListener("change", filterQuote);
 
+// Initial setup
 populateCategories();
 displayQuotes();
 
-setInterval(fetchQuotesFromServer, 60000);
+// Periodically fetch server data
+setInterval(fetchQuotesFromServer, 60000); // Fetch every 60 seconds
