@@ -77,7 +77,7 @@ function populateCategories() {
   });
 }
 
-function filterByCategory() {
+function filterQuote() {
   const selectedCategory = document.getElementById("categoryFilter").value;
   const filteredQuotes =
     selectedCategory === "all"
@@ -104,6 +104,9 @@ document.getElementById("exportQuotes").addEventListener("click", exportQuotes);
 document
   .getElementById("importFile")
   .addEventListener("change", importFromJsonFile);
+document
+  .getElementById("categoryFilter")
+  .addEventListener("change", filterQuote);
 
 // Initial setup
 populateCategories();
