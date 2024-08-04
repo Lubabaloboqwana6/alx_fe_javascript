@@ -30,6 +30,7 @@ function createAddQuoteForm() {
     const newQuote = { text: newQuoteText, category: newQuoteCategory };
     quotes.push(newQuote);
     saveQuotes();
+    postQuoteToServer(newQuote);
     document.getElementById("newQuoteText").value = "";
     document.getElementById("newQuoteCategory").value = "";
 
@@ -38,6 +39,21 @@ function createAddQuoteForm() {
     displayQuotes();
   } else {
     alert("Please add a new quote");
+  }
+}
+
+async function postQuoteToServer(quote) {
+  try {
+    const response = await fetch(serverUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(quote),
+    });
+    if (!response.ok) throw new Error("Failed to post quote to server.");
+  } catch (error) {
+    console.error("Error posting quote to server:", error);
   }
 }
 
@@ -126,6 +142,10 @@ function resolveConflicts(serverQuotes) {
   notifyUser("Data has been synced with the server.");
 }
 
+async function syncQuotes() {
+  await fetchQuotesFromServer();
+}
+
 function notifyUser(message) {
   const notification = document.getElementById("notification");
   notification.textContent = message;
@@ -150,5 +170,5 @@ document
 populateCategories();
 displayQuotes();
 
-// Periodically fetch server data
-setInterval(fetchQuotesFromServer, 60000); // Fetch every 60 seconds
+// Periodically fetch server data and sync quotes
+setInterval(syncQuotes, 60000); // Sync every 60 seconds
