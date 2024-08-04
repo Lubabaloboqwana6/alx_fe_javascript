@@ -14,8 +14,8 @@ function saveQuotes() {
 }
 
 function showRandomQuote() {
-  const randomQuotes = Math.floor(Math.random() * quotes.length);
-  const quote = quotes[randomQuotes];
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const quote = quotes[randomIndex];
   const quoteDisplay = document.querySelector("#quoteDisplay");
   quoteDisplay.innerHTML = `<p>${quote.text}</p> <em><p>${quote.category}</p></em>`;
   sessionStorage.setItem("lastViewedQuote", JSON.stringify(quote));
@@ -49,7 +49,7 @@ function exportQuotes() {
 
   const exportFileDefaultName = "quotes.json";
 
-  let linkElement = document.createElement("a");
+  const linkElement = document.createElement("a");
   linkElement.setAttribute("href", url);
   linkElement.setAttribute("download", exportFileDefaultName);
   linkElement.click();
@@ -68,6 +68,9 @@ function importFromJsonFile(event) {
 }
 
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
+document
+  .getElementById("addQuote")
+  .addEventListener("click", createAddQuoteForm);
 document.getElementById("exportQuotes").addEventListener("click", exportQuotes);
 document
   .getElementById("importFile")
