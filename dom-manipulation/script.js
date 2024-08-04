@@ -1,3 +1,4 @@
+const serverUrl = "https://jsonplaceholder.typicode.com/posts";
 const quotes = JSON.parse(localStorage.getItem("quotes")) || [
   {
     text: "The only limit to our realization of tomorrow is our doubts of today",
@@ -60,7 +61,7 @@ function importFromJsonFile(event) {
     quotes.push(...importedQuotes);
     saveQuotes();
     alert("Quotes imported successfully!");
-    location.reload(); // Reload the page to reflect the imported quotes
+    location.reload();
   };
   fileReader.readAsText(event.target.files[0]);
 }
@@ -96,6 +97,42 @@ function displayQuotes(quotesToDisplay = quotes) {
   });
 }
 
+function fetchServerData() {
+  fetch(serverUrl)
+    .then((response) => response.json())
+    .then((serverQuotes) => {
+      resolveConflicts(serverQuotes);
+    })
+    .catch((error) => console.error("Error fetching data from server:", error));
+}
+
+function resolveConflicts(serverQuotes) {
+  const localQuotes = JSON.parse(localStorage.getItem("quotes")) || [];
+  const mergedQuotes = [...serverQuotes, ...localQuotes];
+
+  const uniqueQuotes = mergedQuotes.filter(
+    (quote, index, self) =>
+      index ===
+      self.findIndex(
+        (q) => q.text === quote.text && q.category === quote.category
+      )
+  );
+
+  localStorage.setItem("quotes", JSON.stringify(uniqueQuotes));
+  quotes.length = 0;
+  quotes.push(...uniqueQuotes);
+  displayQuotes();
+  notifyUser("Data has been synced with the server.");
+}
+
+function notifyUser(message) {
+  const notification = document.getElementById("notification");
+  notification.textContent = message;
+  setTimeout(() => {
+    notification.textContent = "";
+  }, 5000);
+}
+
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 document
   .getElementById("addQuote")
@@ -108,6 +145,7 @@ document
   .getElementById("categoryFilter")
   .addEventListener("change", filterQuote);
 
-// Initial setup
 populateCategories();
 displayQuotes();
+
+setInterval(fetchServerData, 60000);
