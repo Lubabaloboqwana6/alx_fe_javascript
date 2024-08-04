@@ -139,7 +139,7 @@ function resolveConflicts(serverQuotes) {
   quotes.length = 0; // Clear current quotes array
   quotes.push(...uniqueQuotes);
   displayQuotes();
-  notifyUser("Data has been synced with the server.");
+  notifyUser("Quotes synced with server!"); // Notify user that quotes are synced
 }
 
 async function syncQuotes() {
@@ -147,10 +147,18 @@ async function syncQuotes() {
 }
 
 function notifyUser(message) {
-  const notification = document.getElementById("notification");
+  const notification = document.createElement("div");
   notification.textContent = message;
+  notification.style.position = "fixed";
+  notification.style.bottom = "10px";
+  notification.style.right = "10px";
+  notification.style.backgroundColor = "#333";
+  notification.style.color = "#fff";
+  notification.style.padding = "10px";
+  notification.style.borderRadius = "5px";
+  document.body.appendChild(notification);
   setTimeout(() => {
-    notification.textContent = "";
+    document.body.removeChild(notification);
   }, 5000);
 }
 
