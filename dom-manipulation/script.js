@@ -32,11 +32,9 @@ function createAddQuoteForm() {
     document.getElementById("newQuoteText").value = "";
     document.getElementById("newQuoteCategory").value = "";
 
-    const newQuoteElement = document.createElement("div");
-    newQuoteElement.innerHTML = `<p>${newQuote.text}</p> <em><p>${newQuote.category}</p></em>`;
-    document.getElementById("quoteContainer").appendChild(newQuoteElement);
-
     alert("Quote added successfully!");
+    populateCategories();
+    displayQuotes();
   } else {
     alert("Please add a new quote");
   }
@@ -62,9 +60,40 @@ function importFromJsonFile(event) {
     quotes.push(...importedQuotes);
     saveQuotes();
     alert("Quotes imported successfully!");
-    location.reload();
+    location.reload(); // Reload the page to reflect the imported quotes
   };
   fileReader.readAsText(event.target.files[0]);
+}
+
+function populateCategories() {
+  const categoryFilter = document.getElementById("categoryFilter");
+  const categories = [...new Set(quotes.map((quote) => quote.category))];
+  categoryFilter.innerHTML = '<option value="all">All</option>';
+  categories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
+}
+
+function filterByCategory() {
+  const selectedCategory = document.getElementById("categoryFilter").value;
+  const filteredQuotes =
+    selectedCategory === "all"
+      ? quotes
+      : quotes.filter((quote) => quote.category === selectedCategory);
+  displayQuotes(filteredQuotes);
+}
+
+function displayQuotes(quotesToDisplay = quotes) {
+  const quoteContainer = document.getElementById("quoteContainer");
+  quoteContainer.innerHTML = "";
+  quotesToDisplay.forEach((quote) => {
+    const quoteElement = document.createElement("div");
+    quoteElement.innerHTML = `<p>${quote.text}</p> <em><p>${quote.category}</p></em>`;
+    quoteContainer.appendChild(quoteElement);
+  });
 }
 
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
@@ -75,3 +104,7 @@ document.getElementById("exportQuotes").addEventListener("click", exportQuotes);
 document
   .getElementById("importFile")
   .addEventListener("change", importFromJsonFile);
+
+// Initial setup
+populateCategories();
+displayQuotes();
