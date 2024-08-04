@@ -139,7 +139,7 @@ function resolveConflicts(serverQuotes) {
   quotes.length = 0; // Clear current quotes array
   quotes.push(...uniqueQuotes);
   displayQuotes();
-  notifyUser("Data has been synced with the server.");
+  notifyUser("Quotes synced with server!");
 }
 
 async function syncQuotes() {
@@ -159,16 +159,4 @@ document
   .getElementById("addQuote")
   .addEventListener("click", createAddQuoteForm);
 document.getElementById("exportQuotes").addEventListener("click", exportQuotes);
-document
-  .getElementById("importFile")
-  .addEventListener("change", importFromJsonFile);
-document
-  .getElementById("categoryFilter")
-  .addEventListener("change", filterQuote);
-
-// Initial setup
-populateCategories();
-displayQuotes();
-
-// Periodically fetch server data and sync quotes
-setInterval(syncQuotes, 60000); // Sync every 60 seconds
+document.getElement;
